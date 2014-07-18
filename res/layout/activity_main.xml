@@ -7,13 +7,6 @@
     tools:context="com.xample.puzzle_grid.MainActivity"
     tools:ignore="MergeRootFrame" >
 
-<!--     <ImageView
-        android:id="@+id/emptyLetterView"
-        android:layout_width="51dp"
-        android:layout_height="51dp"
-        android:background="@drawable/unnamed" >
-    </ImageView> -->
-
     <ImageView
         android:id="@+id/letterView"
         android:layout_width="wrap_content"
@@ -21,5 +14,14 @@
         android:layout_x="180dp"
         android:layout_y="63dp"
         android:background="@drawable/puppy" />
+
+  <Button
+      android:id="@+id/openpopup"
+      android:layout_width="40dp"
+      android:layout_height="wrap_content"
+      android:layout_x="488dp"
+      android:layout_y="204dp"
+      android:background="@drawable/settings"
+      android:text=" " />
 
 </AbsoluteLayout>
