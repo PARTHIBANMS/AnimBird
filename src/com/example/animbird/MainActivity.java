@@ -8,6 +8,8 @@ import android.app.ActionBar;
 import android.app.Fragment;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,79 +28,65 @@ import android.widget.PopupWindow;
 import android.os.Build;
 
 @SuppressWarnings({ "deprecation", "unused" })
-@SuppressLint("ClickableViewAccessibility")
+@SuppressLint({ "ClickableViewAccessibility", "NewApi" })
 public class MainActivity extends Activity implements AnimationListener, OnTouchListener{
 	private ImageView letterView;                       // The letter that the user drags.
 	private ImageView emptyLetterView;              // The letter outline that the user is supposed to drag letterView to.
 	private AbsoluteLayout mainLayout;
-	Animation animSequential;
+	public Animation animSequential;
 	private static final String DEBUG_TAG = "MyActivity";
+	
+	final Handler handler = new Handler();
+	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+
+
 		mainLayout = (AbsoluteLayout) findViewById(R.id.container);
 		mainLayout.setOnTouchListener(this);
 		letterView = (ImageView) findViewById(R.id.letterView);
 		letterView.setOnTouchListener(this);
 		letterView = (ImageView) findViewById(R.id.letterView);
-		
-		
-		
-		
-		
-		
-        final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
-        btnOpenPopup.setOnClickListener(new Button.OnClickListener(){
 
-   @Override
-   public void onClick(View arg0) {
-    LayoutInflater layoutInflater 
-     = (LayoutInflater)getBaseContext()
-      .getSystemService(LAYOUT_INFLATER_SERVICE);  
-    View popupView = layoutInflater.inflate(R.layout.popup, null);  
-             final PopupWindow popupWindow = new PopupWindow(
-               popupView, 
-               LayoutParams.WRAP_CONTENT,  
-                     LayoutParams.WRAP_CONTENT);  
-             
-             Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
-             btnDismiss.setOnClickListener(new Button.OnClickListener(){
+		final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
+		
+		
 
-     @Override
-     public void onClick(View v) {
-      // TODO Auto-generated method stub
-      popupWindow.dismiss();
-     }});
-               
-             popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
-         
-   }});
+		btnOpenPopup.setOnClickListener(new Button.OnClickListener()
+		{
 
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		//		if (savedInstanceState == null) {
-		//			getFragmentManager().beginTransaction()
-		//			.add(R.id.container, new PlaceholderFragment()).commit();
-		//		}
-}
-// private boolean dragging = false;
-//	private Rect hitRect = new Rect();
+			@Override
+			public void onClick(View arg0) 
+			{
+
+				LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE); 
+
+				View popupView = layoutInflater.inflate(R.layout.popup, null); 
+
+				final PopupWindow popupWindow = new PopupWindow( popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);  
+
+				popupWindow.showAtLocation(popupView, Gravity.CLIP_VERTICAL, 0, 0);
+
+				Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
+
+				btnDismiss.setOnClickListener(new Button.OnClickListener()
+				{
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						popupWindow.dismiss();
+					}});
+
+				popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
+
+			}});
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -120,64 +108,93 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 		return super.onOptionsItemSelected(item);
 	}
 
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	//	public static class PlaceholderFragment extends Fragment {
-	//
-	//		public PlaceholderFragment() {
-	//		}
-	//
-	//		@Override
-	//		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	//				Bundle savedInstanceState) {
-	//			View rootView = inflater.inflate(R.layout.fragment_main, container,
-	//					false);
-	//			return rootView;
-	//		}
-	//	}
-
+	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		boolean eventConsumed = true;
 		int x = (int)event.getX();
 		int y = (int)event.getY();
+		System.out.println("x value " + x );
+		System.out.println("y value " + y );
 
 		int action = event.getAction();
 		if (action == MotionEvent.ACTION_DOWN) {
 			if (v == letterView) {
 				//letterView.setImageResource(R.drawable.ic_launcher);
-			//	dragging = true;
+				//	dragging = true;
 				eventConsumed = false;
 			}
+			
 
 			setAbsoluteLocationCentered(letterView, x, y);
 			
 
-//			// load the animation
-//			animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
-//					R.anim.flyingbird);
+
+			// load the animation
+			animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
+					R.anim.flyingbird);
+
+			// set animation listener
+			animSequential.setAnimationListener(this);
+
+			letterView.startAnimation(animSequential);
+
+			System.out.println("Animation running");
+			
+//			handler.postDelayed(new Runnable() {
+//			@Override
+//			public void run() {
 //
-//			// set animation listener
-//			animSequential.setAnimationListener(this);
+//				// Do something after 5s = 5000ms
 //			
-//			letterView.startAnimation(animSequential);
-//			
-//			System.out.println("Animation running");
-//			
+//				
+//				// load the animation
+//				animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
+//						R.anim.move);
+//
+//				// set animation listener
+//				animSequential.setAnimationListener(this);
+//
+//				letterView.startAnimation(animSequential);
+//
+//				System.out.println("Animation move running");
+//
+//			}
+//		}, 3000);
+		
+
+
+			
+			
+
+			
+
 
 		} else if (action == MotionEvent.ACTION_UP) {
+
+
 			
-		//	
-			
-			
-			
-//		letterView.setVisibility (View.INVISIBLE);			
-//		System.out.println("Animation stopped");
+
+
 			
 			
-			
-			
+//			if (v != letterView) {
+//				 boolean dragging = false;
+//				if (dragging) {
+//					setAbsoluteLocationCentered(letterView, x, y);
+//				}
+//			}
+
+//			letterView.setPivotX(x);
+//			letterView.setPivotY(y);
+
+
+			//		letterView.setVisibility (View.INVISIBLE);			
+			//		System.out.println("Animation stopped");
+
+
+
+
 			//		if (dragging) {
 			//			emptyLetterView.getHitRect(hitRect);
 			//			if (hitRect.contains(x, y)) {
@@ -189,11 +206,11 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 			//		eventConsumed = false;
 
 		} else if (action == MotionEvent.ACTION_MOVE) {
-			//		if (v != letterView) {
-			//			if (dragging) {
-			//				setAbsoluteLocationCentered(letterView, x, y);
-			//			}
-			//		}
+//					if (v != letterView) {
+//						if (dragging) {
+//							setAbsoluteLocationCentered(letterView, x, y);
+//						}
+//					}
 		}
 
 		return eventConsumed;
