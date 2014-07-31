@@ -23,5 +23,7 @@
       android:layout_x="259dp"
       android:layout_y="98dp"
       android:background="@drawable/puppy" />
+  
+
 
 </AbsoluteLayout>

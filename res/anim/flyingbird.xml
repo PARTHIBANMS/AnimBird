@@ -14,6 +14,16 @@
     <!-- Use startOffset to give delay between animations -->
 
 
+  <alpha
+        android:duration="4000"
+        android:fromAlpha="1.0"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toAlpha="0.0" />
+  
+ 
+  
+
+
     <!-- Move -->
 
    <!--  <translate

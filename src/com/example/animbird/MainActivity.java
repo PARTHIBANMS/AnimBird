@@ -19,6 +19,7 @@ import android.view.View.OnTouchListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.view.ViewGroup;
 import android.widget.AbsoluteLayout;
 import android.widget.Button;
@@ -34,6 +35,7 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 	private ImageView emptyLetterView;              // The letter outline that the user is supposed to drag letterView to.
 	private AbsoluteLayout mainLayout;
 	public Animation animSequential;
+	TranslateAnimation translateanimate;
 	private static final String DEBUG_TAG = "MyActivity";
 	
 	final Handler handler = new Handler();
@@ -119,27 +121,33 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 
 		int action = event.getAction();
 		if (action == MotionEvent.ACTION_DOWN) {
-			if (v == letterView) {
-				//letterView.setImageResource(R.drawable.ic_launcher);
-				//	dragging = true;
-				eventConsumed = false;
-			}
+//			if (v == letterView) {
+//				//letterView.setImageResource(R.drawable.ic_launcher);
+//				//	dragging = true;
+//				eventConsumed = false;
+//			}
+//			
+//
+//			setAbsoluteLocationCentered(letterView, x, y);
+//			
+//
+//
+//			// load the animation
+//			animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
+//					R.anim.flyingbird);
+//
+//			// set animation listener
+//			animSequential.setAnimationListener(this);
+//
+//			letterView.startAnimation(animSequential);
+//
+//			System.out.println("Animation running");
 			
-
-			setAbsoluteLocationCentered(letterView, x, y);
+			int a = (int)event.getX();
+			int b = (int)event.getY();
 			
-
-
-			// load the animation
-			animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
-					R.anim.flyingbird);
-
-			// set animation listener
-			animSequential.setAnimationListener(this);
-
-			letterView.startAnimation(animSequential);
-
-			System.out.println("Animation running");
+			
+			translateanimate = new TranslateAnimation(0,a,0,b);
 			
 //			handler.postDelayed(new Runnable() {
 //			@Override
@@ -172,9 +180,13 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 
 		} else if (action == MotionEvent.ACTION_UP) {
 
-
+//			int a = (int)event.getX();
+//			int b = (int)event.getY();
+//			
+//			
+//			translateanimate = new TranslateAnimation(0,a,0,b);
 			
-
+			//letterView.drawImage(puppy, a, b, this);
 
 			
 			
