@@ -1,12 +1,16 @@
 package com.example.animbird;
 
 
+
+
+
 import android.annotation.SuppressLint;
 import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.graphics.Rect;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Gravity;
@@ -30,65 +34,48 @@ import android.os.Build;
 
 @SuppressWarnings({ "deprecation", "unused" })
 @SuppressLint({ "ClickableViewAccessibility", "NewApi" })
-public class MainActivity extends Activity implements AnimationListener, OnTouchListener{
-	private ImageView letterView;                       // The letter that the user drags.
-	private ImageView emptyLetterView;              // The letter outline that the user is supposed to drag letterView to.
-	private AbsoluteLayout mainLayout;
-	public Animation animSequential;
-	TranslateAnimation translateanimate;
+public class MainActivity extends Activity implements OnTouchListener{
+	private ImageView Puppyimageview;                       // The letter that the user drags.	             
+	private AbsoluteLayout mainLayout;	
 	private static final String DEBUG_TAG = "MyActivity";
-	
+	TranslateAnimation Puppyanimation;
+	ImageView[] image;
+	int point=-1;
+
 	final Handler handler = new Handler();
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) 
 	{
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-		
-
-
+		setContentView(R.layout.activity_main);		
 		mainLayout = (AbsoluteLayout) findViewById(R.id.container);
 		mainLayout.setOnTouchListener(this);
-		letterView = (ImageView) findViewById(R.id.letterView);
-		letterView.setOnTouchListener(this);
-		letterView = (ImageView) findViewById(R.id.letterView);
+		Puppyimageview = (ImageView) findViewById(R.id.puppy);
+		Puppyimageview.setOnTouchListener(this);
+		image = new ImageView[10];
+		image[0] = (ImageView)findViewById(R.id.imageView1);
+		image[1] = (ImageView)findViewById(R.id.imageView2);
+		image[2] = (ImageView)findViewById(R.id.imageView3);
+		image[3] = (ImageView)findViewById(R.id.imageView4);
+		image[4] = (ImageView)findViewById(R.id.imageView5);
+		image[5] = (ImageView)findViewById(R.id.imageView6);
+		image[6] = (ImageView)findViewById(R.id.imageView7);
+		image[7] = (ImageView)findViewById(R.id.imageView8);
+		image[8] = (ImageView)findViewById(R.id.imageView9);
+		image[9] = (ImageView)findViewById(R.id.imageView10);
+		for(int i=0;i<=9;i++)
+			image[i].setOnTouchListener(this);
+		///animation for sitting dog
+		Puppyimageview.setBackgroundResource(R.anim.dogsit);
+		final AnimationDrawable sitAnimation = (AnimationDrawable) Puppyimageview.getBackground();
+		Puppyimageview.post(new Runnable() {
+		    public void run() {
+		        if ( sitAnimation != null ) sitAnimation.start();
+		      }
+		});
 
-		final Button btnOpenPopup = (Button)findViewById(R.id.openpopup);
-		
-		
-
-		btnOpenPopup.setOnClickListener(new Button.OnClickListener()
-		{
-
-			@Override
-			public void onClick(View arg0) 
-			{
-
-				LayoutInflater layoutInflater = (LayoutInflater)getBaseContext().getSystemService(LAYOUT_INFLATER_SERVICE); 
-
-				View popupView = layoutInflater.inflate(R.layout.popup, null); 
-
-				final PopupWindow popupWindow = new PopupWindow( popupView, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);  
-
-				popupWindow.showAtLocation(popupView, Gravity.CLIP_VERTICAL, 0, 0);
-
-				Button btnDismiss = (Button)popupView.findViewById(R.id.dismiss);
-
-				btnDismiss.setOnClickListener(new Button.OnClickListener()
-				{
-
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						popupWindow.dismiss();
-					}});
-
-				popupWindow.showAsDropDown(btnOpenPopup, 50, -30);
-
-			}});
 	}
-
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +96,7 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
+	private boolean dragging = false;
 	@SuppressLint("NewApi")
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
@@ -120,150 +107,114 @@ public class MainActivity extends Activity implements AnimationListener, OnTouch
 		System.out.println("y value " + y );
 
 		int action = event.getAction();
-		if (action == MotionEvent.ACTION_DOWN) {
-//			if (v == letterView) {
-//				//letterView.setImageResource(R.drawable.ic_launcher);
-//				//	dragging = true;
-//				eventConsumed = false;
-//			}
-//			
-//
-//			setAbsoluteLocationCentered(letterView, x, y);
-//			
-//
-//
-//			// load the animation
-//			animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
-//					R.anim.flyingbird);
-//
-//			// set animation listener
-//			animSequential.setAnimationListener(this);
-//
-//			letterView.startAnimation(animSequential);
-//
-//			System.out.println("Animation running");
-			
-			int a = (int)event.getX();
-			int b = (int)event.getY();
-			
-			
-			translateanimate = new TranslateAnimation(0,a,0,b);
-			
-//			handler.postDelayed(new Runnable() {
-//			@Override
-//			public void run() {
-//
-//				// Do something after 5s = 5000ms
-//			
-//				
-//				// load the animation
-//				animSequential = AnimationUtils.loadAnimation(getApplicationContext(),
-//						R.anim.move);
-//
-//				// set animation listener
-//				animSequential.setAnimationListener(this);
-//
-//				letterView.startAnimation(animSequential);
-//
-//				System.out.println("Animation move running");
-//
-//			}
-//		}, 3000);
-		
+		if (action == MotionEvent.ACTION_DOWN) 
+		{
 
+			for (int i=0;i<=9;i++)
+			{
+				if (v == image[i]) {
+					point=i;
+					System.out.println(" image"+i+i+i+i+i+i+i+i+i+i+"is clicked");												
+					dragging = true;
+					eventConsumed = false;
+				}
+			}
 
-			
-			
-
-			
-
-
-		} else if (action == MotionEvent.ACTION_UP) {
-
-//			int a = (int)event.getX();
-//			int b = (int)event.getY();
-//			
-//			
-//			translateanimate = new TranslateAnimation(0,a,0,b);
-			
-			//letterView.drawImage(puppy, a, b, this);
-
-			
-			
-//			if (v != letterView) {
-//				 boolean dragging = false;
-//				if (dragging) {
-//					setAbsoluteLocationCentered(letterView, x, y);
-//				}
-//			}
-
-//			letterView.setPivotX(x);
-//			letterView.setPivotY(y);
-
-
-			//		letterView.setVisibility (View.INVISIBLE);			
-			//		System.out.println("Animation stopped");
-
-
-
-
-			//		if (dragging) {
-			//			emptyLetterView.getHitRect(hitRect);
-			//			if (hitRect.contains(x, y)) {
-			//				letterView.setImageResource(R.drawable.ic_launcher);
-			//				setSameAbsoluteLocation(letterView, emptyLetterView);
-			//			}
-			//		}
-			//		dragging = false;
-			//		eventConsumed = false;
-
-		} else if (action == MotionEvent.ACTION_MOVE) {
-//					if (v != letterView) {
-//						if (dragging) {
-//							setAbsoluteLocationCentered(letterView, x, y);
-//						}
-//					}
 		}
+		else if (action == MotionEvent.ACTION_UP) 
+		{
+			if(point==0)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X-20,0,-Y-180);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==1)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==2)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==3)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==4)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==5)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==6)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==7)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==8)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			if(point==9)
+			{
+				int X = (int) image[0].getX();
+				int Y = (int) image[0].getY();
+				Puppyanimation = new TranslateAnimation(0,X,0,-Y-220);
+				Puppyanimation.setDuration(2000);
+				Puppyimageview.startAnimation(Puppyanimation);												
+			}
+			
 
+
+
+		} else if (action == MotionEvent.ACTION_MOVE) 
+		{
+
+		}	
 		return eventConsumed;
 	}
-	private void setSameAbsoluteLocation(View v1, View v2) {
-		AbsoluteLayout.LayoutParams alp2 = (AbsoluteLayout.LayoutParams) v2.getLayoutParams();
-		setAbsoluteLocation(v1, alp2.x, alp2.y);
-	}
 
 
-	private void setAbsoluteLocationCentered(View v, int x, int y) {
-		setAbsoluteLocation(v, x - v.getWidth() / 2, y - v.getHeight() / 2);
-	}
 
-
-	private void setAbsoluteLocation(View v, int x, int y) {
-		AbsoluteLayout.LayoutParams alp = (AbsoluteLayout.LayoutParams) v.getLayoutParams();
-		alp.x = x;
-		alp.y = y;
-		v.setLayoutParams(alp);
-	}
-	@Override
-	public void onAnimationEnd(Animation animation) {
-		// Take any action after completing the animation
-
-		// check for zoom in animation
-		if (animation == animSequential) {
-		}
-
-	}
-
-	@Override
-	public void onAnimationRepeat(Animation animation) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void onAnimationStart(Animation animation) {
-		// TODO Auto-generated method stub
-
-	}
 
 }
